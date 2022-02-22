@@ -1,0 +1,4 @@
+vader_lexicon
+stopwords
+wordnet
+omw-1.4
