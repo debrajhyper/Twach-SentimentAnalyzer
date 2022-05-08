@@ -44,9 +44,13 @@ api = tweepy.API(auth)
 # twitter scraping function
 
 
-def scraptweets(search_words, date_since, numTweets, numRuns):
+def scraptweets(search_words, option_location, date_since, numTweets, numRuns):
     # Define a for-loop to generate tweets at regular intervals
     # We cannot make large API call in one go. Hence, let's try T times
+    if option_location == 'India':
+        location = '20.593684,78.96288,20000km'
+    elif option_location == 'USA':
+        location = '37.09024,-95.712891,20000km'
 
     # Define a pandas dataframe to store the date:
     db_tweets = pd.DataFrame(columns = ['username', 'acctdesc', 'location', 'following',
@@ -70,7 +74,7 @@ def scraptweets(search_words, date_since, numTweets, numRuns):
                 db_tweets = db_tweets.append({'text': text}, ignore_index=True)
 
         else:
-            tweets = tweepy.Cursor(api.search_tweets , q=search_words, lang="en", until=date_since, tweet_mode='extended', count=numTweets).items(
+            tweets = tweepy.Cursor(api.search_tweets , q=search_words, geocode=location, lang="en", until=date_since, tweet_mode='extended', count=numTweets).items(
                 numTweets)
             # print("API ------- > ", tweepy.Cursor(api.search_tweets, q=search_words, lang="en", count=100).items(250))
 
@@ -157,6 +161,7 @@ footer = st.container()
 
 
 option = st.sidebar.selectbox('Analyse by:', ('Hashtag', 'Username'))
+option_location = st.sidebar.selectbox('Analyse by Location:', ('India','USA'))
 st.sidebar.header('How many tweets should be extracted?')
 numTweets = st.sidebar.slider(
     ' ', min_value=10, max_value=500, step=50, value=50)
@@ -214,7 +219,7 @@ with dataset:
     if search_words != '#' and search_words != '' and search_words != '@':
         if pressed:
             program_start = time.time()
-            scraptweets(search_words, date_since, numTweets, numRuns)
+            scraptweets(search_words, option_location, date_since, numTweets, numRuns)
             st.success('Scraping done successfully ')
             df = pd.DataFrame()
             tweets = pd.read_csv('data/test_data_tweets.csv')

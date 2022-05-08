@@ -11,8 +11,8 @@
         color: rgb(255, 255, 255);
     }
 
-    local_css('style.css')
+    /* local_css('style.css')
 
     from datetime import datetime, timedelta
 
-d = datetime.today() - timedelta(days=days_to_subtract)
+d = datetime.today() - timedelta(days=days_to_subtract) */
